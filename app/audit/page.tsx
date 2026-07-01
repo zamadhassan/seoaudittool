@@ -32,6 +32,9 @@ function AuditRunningContent() {
       .then(async (response) => {
         const data = await response.json()
         if (!response.ok) throw new Error(data.error || 'Audit failed.')
+        if (data.report?.id) {
+          localStorage.setItem(`nexora-report-${data.report.id}`, JSON.stringify(data.report))
+        }
         router.push(data.reportUrl)
       })
       .catch((err: Error) => setError(err.message))

@@ -22,7 +22,8 @@ export async function POST(request: Request) {
     return NextResponse.json({
       reportId: report.id,
       status: 'completed',
-      reportUrl: `/report/${report.id}`
+      reportUrl: `/report/${report.id}`,
+      report
     })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Audit failed.'

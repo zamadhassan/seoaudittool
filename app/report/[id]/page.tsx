@@ -1,13 +1,60 @@
+'use client'
+
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { useParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import { IssueCard } from '@/components/audit/IssueCard'
 import { ScoreCard } from '@/components/audit/ScoreCard'
-import { getReport } from '@/features/audit/cache/auditCache'
+import type { AuditReport } from '@/types/audit'
 
-export default async function ReportPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
-  const report = await getReport(id)
-  if (!report) notFound()
+export default function ReportPage() {
+  const params = useParams<{ id: string }>()
+  const [report, setReport] = useState<AuditReport | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    const id = params.id
+    const cached = localStorage.getItem(`nexora-report-${id}`)
+    if (cached) {
+      try {
+        setReport(JSON.parse(cached) as AuditReport)
+        setLoading(false)
+      } catch {
+        localStorage.removeItem(`nexora-report-${id}`)
+      }
+    }
+
+    fetch(`/api/report/${id}`)
+      .then(async (response) => {
+        if (!response.ok) {
+          if (cached) return null
+          throw new Error('Report not found. Re-run the audit to generate a fresh report.')
+        }
+        return response.json() as Promise<AuditReport>
+      })
+      .then((data) => {
+        if (!data) return
+        localStorage.setItem(`nexora-report-${data.id}`, JSON.stringify(data))
+        setReport(data)
+      })
+      .catch((err: Error) => setError(err.message))
+      .finally(() => setLoading(false))
+  }, [params.id])
+
+  if (loading) {
+    return <main className="mx-auto min-h-[70vh] max-w-7xl px-4 py-10 text-zinc-300 sm:px-6 lg:px-8">Loading report...</main>
+  }
+
+  if (!report) {
+    return (
+      <main className="mx-auto min-h-[70vh] max-w-3xl px-4 py-20 sm:px-6 lg:px-8">
+        <h1 className="text-4xl font-black">Report not found</h1>
+        <p className="mt-4 text-zinc-400">{error || 'This report is no longer available on the server.'}</p>
+        <Link href="/" className="mt-6 inline-flex rounded-full bg-nexora-yellow px-5 py-3 font-bold text-black">Run a new audit</Link>
+      </main>
+    )
+  }
 
   const failedIssues = report.issues.filter((issue) => issue.severity !== 'passed')
   const passedIssues = report.issues.filter((issue) => issue.severity === 'passed')
@@ -24,7 +71,7 @@ export default async function ReportPage({ params }: { params: Promise<{ id: str
           </div>
           <div className="flex gap-3">
             <a href={`/api/pdf/${report.id}`} className="rounded-full bg-nexora-yellow px-5 py-3 font-bold text-black">Export PDF</a>
-            <Link href={`/?url=${encodeURIComponent(report.finalUrl)}`} className="rounded-full border border-white/15 px-5 py-3 font-bold text-white">Re-run</Link>
+            <Link href={`/audit?url=${encodeURIComponent(report.finalUrl)}`} className="rounded-full border border-white/15 px-5 py-3 font-bold text-white">Re-run</Link>
           </div>
         </div>
       </section>
