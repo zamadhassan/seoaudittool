@@ -1,0 +1,141 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String        @id @default(cuid())
+  name      String?
+  email     String?       @unique
+  image     String?
+  projects  Project[]
+  reports   AuditReport[]
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+}
+
+model Project {
+  id        String        @id @default(cuid())
+  userId    String?
+  user      User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+  domain    String
+  name      String
+  reports   AuditReport[]
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@index([domain])
+  @@index([userId])
+}
+
+model AuditReport {
+  id                 String       @id
+  userId             String?
+  projectId          String?
+  user               User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  project            Project?     @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  url                String
+  finalUrl           String
+  domain             String
+  status             AuditStatus  @default(completed)
+  overallScore       Int
+  technicalScore     Int
+  performanceScore   Int
+  accessibilityScore Int
+  securityScore      Int
+  crawlabilityScore  Int
+  indexabilityScore  Int
+  onPageScore        Int
+  croScore           Int
+  mobileScore        Int
+  aiSeoScore         Int
+  summaryJson        Json
+  rawJson            Json
+  issues             AuditIssue[]
+  pages              PageCrawl[]
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+
+  @@index([domain])
+  @@index([userId])
+  @@index([projectId])
+}
+
+model AuditIssue {
+  id             String        @id @default(cuid())
+  reportId       String
+  report         AuditReport   @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  title          String
+  description    String
+  category       String
+  severity       AuditSeverity
+  priority       AuditPriority
+  scoreImpact    Int
+  recommendation String
+  whyItMatters   String?
+  howToFix       String?
+  businessImpact String?
+  seoImpact      String?
+  croImpact      String?
+  affectedUrl    String?
+  evidenceJson   Json?
+  createdAt      DateTime      @default(now())
+
+  @@index([reportId])
+  @@index([category])
+  @@index([severity])
+}
+
+model PageCrawl {
+  id              String      @id @default(cuid())
+  reportId        String
+  report          AuditReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  url             String
+  statusCode      Int
+  contentType     String
+  title           String
+  metaDescription String
+  h1              String
+  wordCount       Int
+  internalLinks   Int
+  externalLinks   Int
+  imageCount      Int
+  createdAt       DateTime    @default(now())
+
+  @@index([reportId])
+}
+
+model AuditCache {
+  id         String   @id @default(cuid())
+  urlHash    String   @unique
+  url        String
+  resultJson Json
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+
+  @@index([expiresAt])
+}
+
+enum AuditStatus {
+  pending
+  running
+  completed
+  failed
+}
+
+enum AuditSeverity {
+  critical
+  warning
+  notice
+  passed
+}
+
+enum AuditPriority {
+  high
+  medium
+  low
+}
