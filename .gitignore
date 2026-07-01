@@ -13,3 +13,4 @@ pnpm-debug.log*
 .vercel/
 coverage/
 prisma/dev.db
+tsconfig.tsbuildinfo
