@@ -40,7 +40,7 @@ export default function HomePage() {
 
           <div className="mx-auto mt-10 grid max-w-4xl gap-3 sm:grid-cols-3">
             {proofPoints.map((item, index) => (
-              <div key={item.label} className="glass-card soft-transition rounded-3xl p-4 text-left" style={{ animationDelay: `${index * 90 + 420}ms` }}>
+              <div key={item.label} className="glass-card soft-transition rounded-[10px] p-4 text-left" style={{ animationDelay: `${index * 90 + 420}ms` }}>
                 <FontAwesomeIcon icon={item.icon} className="h-5 w-5 text-nexora-yellow" />
                 <div className="mt-3 text-2xl font-black">{item.value}</div>
                 <div className="text-sm text-zinc-400">{item.label}</div>
@@ -60,9 +60,9 @@ export default function HomePage() {
         </div>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {features.map((feature) => (
-            <div key={feature.title} className="glass-card soft-transition group relative overflow-hidden rounded-[1.75rem] p-6">
+            <div key={feature.title} className="glass-card soft-transition group relative overflow-hidden rounded-[10px] p-6">
               <div className={`absolute inset-0 -z-10 bg-gradient-to-br ${feature.accent} opacity-70 transition duration-300 group-hover:opacity-100`} />
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-yellow-300/25 bg-yellow-300/10 text-nexora-yellow shadow-lg shadow-yellow-500/10">
+              <div className="flex h-12 w-12 items-center justify-center rounded-[10px] border border-yellow-300/25 bg-yellow-300/10 text-nexora-yellow shadow-lg shadow-yellow-500/10">
                 <FontAwesomeIcon icon={feature.icon} className="h-5 w-5" />
               </div>
               <h3 className="mt-5 text-xl font-bold">{feature.title}</h3>
@@ -73,7 +73,7 @@ export default function HomePage() {
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="glass-card animate-glow-pulse rounded-[2rem] p-8 md:p-12">
+        <div className="glass-card animate-glow-pulse rounded-[10px] p-8 md:p-12">
           <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.22em] text-nexora-yellow">Workflow</p>
@@ -83,8 +83,8 @@ export default function HomePage() {
           </div>
           <div className="mt-8 grid gap-4 md:grid-cols-4">
             {['Securely validate your URL', 'Fetch and analyze real page HTML', 'Run SEO, CRO, UX, and security checks', 'Show scores, priorities, and fixes'].map((step, index) => (
-              <div key={step} className="soft-transition rounded-3xl border border-white/10 bg-black/30 p-5 shadow-xl shadow-black/20">
-                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-nexora-yellow font-black text-black">0{index + 1}</div>
+              <div key={step} className="soft-transition rounded-[10px] border border-white/10 bg-black/30 p-5 shadow-xl shadow-black/20">
+                <div className="flex h-11 w-11 items-center justify-center rounded-[10px] bg-nexora-yellow font-black text-black">0{index + 1}</div>
                 <div className="mt-4 font-semibold leading-6">{step}</div>
               </div>
             ))}

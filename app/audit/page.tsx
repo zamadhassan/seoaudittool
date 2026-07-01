@@ -46,10 +46,10 @@ function AuditRunningContent() {
       <p className="mt-3 text-zinc-400">We are checking real website signals for SEO, performance, accessibility, security, and conversion readiness.</p>
       <div className="mt-8 space-y-3">
         {steps.map((step, index) => (
-          <div key={step} className={`rounded-2xl border p-4 ${index <= activeStep ? 'border-yellow-300/40 bg-yellow-300/10 text-yellow-50' : 'border-white/10 bg-white/[0.03] text-zinc-500'}`}>{step}</div>
+          <div key={step} className={`rounded-[10px] border p-4 ${index <= activeStep ? 'border-yellow-300/40 bg-yellow-300/10 text-yellow-50' : 'border-white/10 bg-white/[0.03] text-zinc-500'}`}>{step}</div>
         ))}
       </div>
-      {error ? <div className="mt-6 rounded-2xl border border-red-400/30 bg-red-500/10 p-4 text-red-100">{error}</div> : null}
+      {error ? <div className="mt-6 rounded-[10px] border border-red-400/30 bg-red-500/10 p-4 text-red-100">{error}</div> : null}
     </main>
   )
 }

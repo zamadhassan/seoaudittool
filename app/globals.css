@@ -80,6 +80,7 @@ body::before {
 
 .glass-card {
   border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.025));
   box-shadow: 0 24px 90px rgba(0, 0, 0, 0.28);
   backdrop-filter: blur(18px);

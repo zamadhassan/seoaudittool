@@ -98,7 +98,7 @@ export default function ReportPage() {
   if (loading) {
     return (
       <main className="mx-auto min-h-[70vh] max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-8 text-zinc-300">Loading detailed report...</div>
+        <div className="rounded-[10px] border border-white/10 bg-white/[0.04] p-8 text-zinc-300">Loading detailed report...</div>
       </main>
     )
   }
@@ -121,7 +121,7 @@ export default function ReportPage() {
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-      <section className="glass-card relative overflow-hidden rounded-[2rem] p-6 md:p-10">
+      <section className="glass-card relative overflow-hidden rounded-[10px] p-6 md:p-10">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(254,203,47,0.22),transparent_35%),linear-gradient(135deg,rgba(255,255,255,0.08),transparent)]" />
         <div className="relative grid gap-8 lg:grid-cols-[1.3fr_0.7fr] lg:items-end">
           <div>
@@ -140,7 +140,7 @@ export default function ReportPage() {
               <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2">{report.issues.length} checks reviewed</span>
             </div>
           </div>
-          <div className="rounded-[2rem] border border-yellow-300/30 bg-black/35 p-6">
+          <div className="rounded-[10px] border border-yellow-300/30 bg-black/35 p-6">
             <div className="flex items-center gap-2 text-sm text-zinc-400"><FontAwesomeIcon icon={faBullseye} className="h-4 w-4 text-nexora-yellow" /> Website Health Score</div>
             <div className="mt-2 flex items-end gap-3">
               <div className="text-7xl font-black text-nexora-yellow">{report.scores.overall}</div>
@@ -157,10 +157,10 @@ export default function ReportPage() {
       </section>
 
       <section className="mt-6 grid gap-4 md:grid-cols-4">
-        <div className="glass-card soft-transition rounded-[1.6rem] p-5"><FontAwesomeIcon icon={faExclamationCircle} className="h-5 w-5 text-red-300" /><div className="mt-3 text-3xl font-black text-red-200">{counts.critical}</div><div className="text-sm text-red-100/80">Critical issues</div></div>
-        <div className="glass-card soft-transition rounded-[1.6rem] p-5"><FontAwesomeIcon icon={faTriangleExclamation} className="h-5 w-5 text-yellow-100" /><div className="mt-3 text-3xl font-black text-yellow-100">{counts.warning}</div><div className="text-sm text-yellow-100/80">Warnings</div></div>
-        <div className="glass-card soft-transition rounded-[1.6rem] p-5"><FontAwesomeIcon icon={faLightbulb} className="h-5 w-5 text-blue-100" /><div className="mt-3 text-3xl font-black text-blue-100">{counts.notice}</div><div className="text-sm text-blue-100/80">Opportunities</div></div>
-        <div className="glass-card soft-transition rounded-[1.6rem] p-5"><FontAwesomeIcon icon={faCircleCheck} className="h-5 w-5 text-emerald-100" /><div className="mt-3 text-3xl font-black text-emerald-100">{counts.passed}</div><div className="text-sm text-emerald-100/80">Passed checks</div></div>
+        <div className="glass-card soft-transition rounded-[10px] p-5"><FontAwesomeIcon icon={faExclamationCircle} className="h-5 w-5 text-red-300" /><div className="mt-3 text-3xl font-black text-red-200">{counts.critical}</div><div className="text-sm text-red-100/80">Critical issues</div></div>
+        <div className="glass-card soft-transition rounded-[10px] p-5"><FontAwesomeIcon icon={faTriangleExclamation} className="h-5 w-5 text-yellow-100" /><div className="mt-3 text-3xl font-black text-yellow-100">{counts.warning}</div><div className="text-sm text-yellow-100/80">Warnings</div></div>
+        <div className="glass-card soft-transition rounded-[10px] p-5"><FontAwesomeIcon icon={faLightbulb} className="h-5 w-5 text-blue-100" /><div className="mt-3 text-3xl font-black text-blue-100">{counts.notice}</div><div className="text-sm text-blue-100/80">Opportunities</div></div>
+        <div className="glass-card soft-transition rounded-[10px] p-5"><FontAwesomeIcon icon={faCircleCheck} className="h-5 w-5 text-emerald-100" /><div className="mt-3 text-3xl font-black text-emerald-100">{counts.passed}</div><div className="text-sm text-emerald-100/80">Passed checks</div></div>
       </section>
 
       <section className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
@@ -168,16 +168,16 @@ export default function ReportPage() {
       </section>
 
       <section className="mt-8 grid gap-6 lg:grid-cols-[1fr_0.8fr]">
-        <div className="glass-card rounded-[1.75rem] p-6">
+        <div className="glass-card rounded-[10px] p-6">
           <h2 className="text-2xl font-black">Executive summary</h2>
           <p className="mt-4 leading-7 text-zinc-300">{report.summary.executiveSummary}</p>
           <div className="mt-6 grid gap-4 md:grid-cols-3">
-            <p className="rounded-2xl border border-white/10 bg-black/20 p-4 text-sm leading-6 text-zinc-400"><span className="font-bold text-white">SEO impact:</span> {report.summary.seoImpact}</p>
-            <p className="rounded-2xl border border-white/10 bg-black/20 p-4 text-sm leading-6 text-zinc-400"><span className="font-bold text-white">CRO impact:</span> {report.summary.croImpact}</p>
-            <p className="rounded-2xl border border-white/10 bg-black/20 p-4 text-sm leading-6 text-zinc-400"><span className="font-bold text-white">Business impact:</span> {report.summary.businessImpact}</p>
+            <p className="rounded-[10px] border border-white/10 bg-black/20 p-4 text-sm leading-6 text-zinc-400"><span className="font-bold text-white">SEO impact:</span> {report.summary.seoImpact}</p>
+            <p className="rounded-[10px] border border-white/10 bg-black/20 p-4 text-sm leading-6 text-zinc-400"><span className="font-bold text-white">CRO impact:</span> {report.summary.croImpact}</p>
+            <p className="rounded-[10px] border border-white/10 bg-black/20 p-4 text-sm leading-6 text-zinc-400"><span className="font-bold text-white">Business impact:</span> {report.summary.businessImpact}</p>
           </div>
         </div>
-        <div className="glass-card rounded-[1.75rem] p-6">
+        <div className="glass-card rounded-[10px] p-6">
           <h2 className="text-2xl font-black">Crawled page snapshot</h2>
           {page ? (
             <div className="mt-4 space-y-3 text-sm text-zinc-400">
@@ -201,7 +201,7 @@ export default function ReportPage() {
         </div>
         <div className="mt-4 grid gap-4 lg:grid-cols-2">
           {report.summary.topFixes.map((fix, index) => (
-            <div key={`${fix.title}-${index}`} className="glass-card soft-transition rounded-[1.75rem] p-6">
+            <div key={`${fix.title}-${index}`} className="glass-card soft-transition rounded-[10px] p-6">
               <div className="flex items-center justify-between gap-4">
                 <div className="text-xs font-bold uppercase tracking-wider text-nexora-yellow">Fix #{index + 1}</div>
                 <div className="rounded-full bg-black/25 px-3 py-1 text-xs text-yellow-100">{fix.priority} priority</div>
@@ -215,7 +215,7 @@ export default function ReportPage() {
         </div>
       </section>
 
-      <section className="glass-card mt-8 rounded-[1.75rem] p-6">
+      <section className="glass-card mt-8 rounded-[10px] p-6">
         <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
           <div>
             <h2 className="text-2xl font-black">Detailed audit findings</h2>
@@ -237,7 +237,7 @@ export default function ReportPage() {
         {reportSections.map((section) => {
           const issues = sectionIssues(report, section.categories)
           return (
-            <div key={section.title} className="glass-card rounded-[1.75rem] p-6">
+            <div key={section.title} className="glass-card rounded-[10px] p-6">
               <div className="flex flex-col justify-between gap-3 md:flex-row md:items-start">
                 <div>
                   <h3 className="text-xl font-bold">{section.title}</h3>
@@ -253,7 +253,7 @@ export default function ReportPage() {
         })}
       </section>
 
-      <section className="glass-card animate-glow-pulse mt-8 rounded-[1.75rem] p-6 text-center">
+      <section className="glass-card animate-glow-pulse mt-8 rounded-[10px] p-6 text-center">
         <h2 className="text-2xl font-black">Need help improving this score?</h2>
         <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-zinc-300">Nexora Creation can help turn these audit findings into a practical SEO, website performance, and conversion improvement plan.</p>
         <a href="https://nexoracreation.com" target="_blank" rel="noreferrer" className="soft-transition mt-5 inline-flex rounded-full bg-nexora-yellow px-6 py-3 font-bold text-black hover:bg-yellow-300"><FontAwesomeIcon icon={faArrowTrendUp} className="mr-2 h-4 w-4" />Visit Nexora Creation</a>

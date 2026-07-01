@@ -7,10 +7,10 @@ export function ScoreCard({ label, score, detail }: { label: string; score: numb
   const tone = score >= 75 ? 'text-emerald-300 bg-emerald-500/10 border-emerald-300/20' : score >= 60 ? 'text-yellow-100 bg-yellow-500/10 border-yellow-300/20' : 'text-red-200 bg-red-500/10 border-red-300/20'
 
   return (
-    <div className="glass-card soft-transition rounded-[1.6rem] p-5">
+    <div className="glass-card soft-transition rounded-[10px] p-5">
       <div className="flex items-start justify-between gap-3">
         <div className="text-sm text-zinc-400">{label}</div>
-        <div className={`flex h-9 w-9 items-center justify-center rounded-2xl border ${tone}`}>
+        <div className={`flex h-9 w-9 items-center justify-center rounded-[10px] border ${tone}`}>
           <FontAwesomeIcon icon={icon} className="h-4 w-4" />
         </div>
       </div>
