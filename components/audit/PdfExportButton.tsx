@@ -1,6 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faDownload } from '@fortawesome/free-solid-svg-icons'
 import type { AuditIssue, AuditReport } from '@/types/audit'
 
 type PdfDoc = import('jspdf').jsPDF
@@ -217,7 +219,10 @@ export function PdfExportButton({ report }: { report: AuditReport }) {
 
   return (
     <button onClick={exportPdf} disabled={exporting} className="rounded-full bg-nexora-yellow px-5 py-3 font-bold text-black transition hover:bg-yellow-300 disabled:cursor-not-allowed disabled:opacity-60">
-      {exporting ? 'Preparing PDF...' : 'Download PDF Report'}
+      <span className="inline-flex items-center gap-2">
+        <FontAwesomeIcon icon={faDownload} className="h-4 w-4" />
+        {exporting ? 'Preparing PDF...' : 'Download PDF Report'}
+      </span>
     </button>
   )
 }
