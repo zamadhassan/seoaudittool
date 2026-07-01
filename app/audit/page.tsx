@@ -4,7 +4,7 @@ import { Suspense } from 'react'
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
-const steps = ['Validating URL', 'Fetching website', 'Parsing HTML', 'Running SEO checks', 'Running CRO checks', 'Generating recommendations', 'Building report']
+const steps = ['Validating website URL', 'Fetching website data', 'Reading page content', 'Checking SEO signals', 'Reviewing conversion readiness', 'Preparing recommendations', 'Building your report']
 
 function AuditRunningContent() {
   const params = useSearchParams()
@@ -42,8 +42,8 @@ function AuditRunningContent() {
 
   return (
     <main className="mx-auto min-h-[70vh] max-w-3xl px-4 py-20 sm:px-6 lg:px-8">
-      <h1 className="text-4xl font-black">Running audit</h1>
-      <p className="mt-3 text-zinc-400">Real checks are running now. Larger sites or slow hosts may take longer.</p>
+      <h1 className="text-4xl font-black">Preparing your website audit</h1>
+      <p className="mt-3 text-zinc-400">We are checking real website signals for SEO, performance, accessibility, security, and conversion readiness.</p>
       <div className="mt-8 space-y-3">
         {steps.map((step, index) => (
           <div key={step} className={`rounded-2xl border p-4 ${index <= activeStep ? 'border-yellow-300/40 bg-yellow-300/10 text-yellow-50' : 'border-white/10 bg-white/[0.03] text-zinc-500'}`}>{step}</div>

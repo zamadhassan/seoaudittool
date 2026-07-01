@@ -13,7 +13,7 @@ export function AuditForm() {
     event.preventDefault()
     setError('')
     if (!url.trim()) {
-      setError('Enter a website URL to audit.')
+      setError('Please enter a website URL to start your audit.')
       return
     }
     startTransition(() => router.push(`/audit?url=${encodeURIComponent(url.trim())}`))
@@ -25,13 +25,13 @@ export function AuditForm() {
         <input
           value={url}
           onChange={(event) => setUrl(event.target.value)}
-          placeholder="Enter website URL e.g. https://example.com"
+          placeholder="Enter your website URL, e.g. https://example.com"
           className="h-14 w-full rounded-2xl border border-white/10 bg-black/40 px-5 text-white outline-none ring-nexora-yellow/60 placeholder:text-zinc-500 focus:ring-2"
         />
         {error ? <p className="px-2 pt-2 text-sm text-red-300">{error}</p> : null}
       </div>
       <button disabled={isPending} className="h-14 rounded-2xl bg-nexora-yellow px-7 font-bold text-black transition hover:bg-yellow-300 disabled:cursor-not-allowed disabled:opacity-60">
-        {isPending ? 'Starting...' : 'Run Free Audit'}
+        {isPending ? 'Starting audit...' : 'Run Free Audit'}
       </button>
     </form>
   )

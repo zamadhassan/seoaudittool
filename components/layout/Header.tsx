@@ -8,8 +8,9 @@ export function Header() {
           Nexora <span className="text-nexora-yellow">Audit Pro</span>
         </Link>
         <nav className="flex items-center gap-4 text-sm text-zinc-300">
-          <Link href="/dashboard" className="hover:text-white">Dashboard</Link>
-          <a href="/#audit" className="rounded-full bg-nexora-yellow px-4 py-2 font-semibold text-black hover:bg-yellow-300">Run Audit</a>
+          <a href="https://nexoracreation.com" target="_blank" rel="noreferrer" className="hidden hover:text-white sm:inline">Nexora Creation</a>
+          <Link href="/dashboard" className="hidden hover:text-white sm:inline">Reports</Link>
+          <a href="/#audit" className="rounded-full bg-nexora-yellow px-4 py-2 font-semibold text-black hover:bg-yellow-300">Start Free Audit</a>
         </nav>
       </div>
     </header>

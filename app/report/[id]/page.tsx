@@ -115,9 +115,15 @@ export default function ReportPage() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(254,203,47,0.22),transparent_35%),linear-gradient(135deg,rgba(255,255,255,0.08),transparent)]" />
         <div className="relative grid gap-8 lg:grid-cols-[1.3fr_0.7fr] lg:items-end">
           <div>
-            <p className="text-sm uppercase tracking-[0.25em] text-nexora-yellow">Agency Audit Report</p>
+            <p className="text-sm uppercase tracking-[0.25em] text-nexora-yellow">Website Audit Report</p>
             <h1 className="mt-3 break-words text-4xl font-black md:text-6xl">{report.domain}</h1>
             <p className="mt-4 break-all text-zinc-300">{report.finalUrl}</p>
+            <p className="mt-3 text-sm text-zinc-400">
+              Powered by{' '}
+              <a href="https://nexoracreation.com" target="_blank" rel="noreferrer" className="font-semibold text-nexora-yellow hover:text-yellow-300">
+                Nexora Creation
+              </a>
+            </p>
             <div className="mt-5 flex flex-wrap gap-3 text-sm text-zinc-300">
               <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2">Audited {new Date(report.createdAt).toLocaleString()}</span>
               {responseTime ? <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2">HTML response {responseTime}ms</span> : null}
@@ -125,7 +131,7 @@ export default function ReportPage() {
             </div>
           </div>
           <div className="rounded-[2rem] border border-yellow-300/30 bg-black/35 p-6">
-            <div className="text-sm text-zinc-400">Overall Score</div>
+            <div className="text-sm text-zinc-400">Website Health Score</div>
             <div className="mt-2 flex items-end gap-3">
               <div className="text-7xl font-black text-nexora-yellow">{report.scores.overall}</div>
               <div className="pb-3 text-xl font-bold text-white">/100</div>
@@ -178,8 +184,8 @@ export default function ReportPage() {
       <section className="mt-8">
         <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
           <div>
-            <h2 className="text-2xl font-black">Top priority fixes</h2>
-            <p className="mt-2 text-sm text-zinc-400">Start here for the fastest SEO, lead generation, and trust improvements.</p>
+            <h2 className="text-2xl font-black">Recommended priority fixes</h2>
+            <p className="mt-2 text-sm text-zinc-400">Start with these actions to improve search visibility, user trust, and lead generation.</p>
           </div>
         </div>
         <div className="mt-4 grid gap-4 lg:grid-cols-2">
@@ -201,8 +207,8 @@ export default function ReportPage() {
       <section className="mt-8 rounded-3xl border border-white/10 bg-white/[0.035] p-6">
         <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-end">
           <div>
-            <h2 className="text-2xl font-black">Detailed findings</h2>
-            <p className="mt-2 text-sm text-zinc-400">Filter issues by severity or review them by audit category below.</p>
+            <h2 className="text-2xl font-black">Detailed audit findings</h2>
+            <p className="mt-2 text-sm text-zinc-400">Filter by severity or review each section to understand what to fix and why it matters.</p>
           </div>
           <div className="flex flex-wrap gap-2">
             {(['all', 'critical', 'warning', 'notice', 'passed'] as const).map((severity) => (
@@ -234,6 +240,12 @@ export default function ReportPage() {
             </div>
           )
         })}
+      </section>
+
+      <section className="mt-8 rounded-3xl border border-yellow-300/20 bg-yellow-300/10 p-6 text-center">
+        <h2 className="text-2xl font-black">Need help improving this score?</h2>
+        <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-zinc-300">Nexora Creation can help turn these audit findings into a practical SEO, website performance, and conversion improvement plan.</p>
+        <a href="https://nexoracreation.com" target="_blank" rel="noreferrer" className="mt-5 inline-flex rounded-full bg-nexora-yellow px-6 py-3 font-bold text-black hover:bg-yellow-300">Visit Nexora Creation</a>
       </section>
     </main>
   )
