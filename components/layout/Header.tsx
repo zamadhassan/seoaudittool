@@ -5,7 +5,7 @@ import { faArrowUpRightFromSquare, faChartSimple } from '@fortawesome/free-solid
 export function Header() {
   return (
     <header className="border-b border-white/10 bg-black/30 backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+      <div className="site-container flex items-center justify-between py-4">
         <Link href="/" className="flex items-center gap-2 text-lg font-bold tracking-tight">
           <span className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-nexora-yellow text-black shadow-lg shadow-yellow-500/20">
             <FontAwesomeIcon icon={faChartSimple} className="h-4 w-4" />

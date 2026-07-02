@@ -11,7 +11,7 @@ const cards = [
 
 export function HeroPreviewCards() {
   return (
-    <div className="pointer-events-none absolute inset-x-0 top-28 mx-auto hidden max-w-7xl justify-between px-6 lg:flex">
+    <div className="pointer-events-none absolute inset-x-0 top-28 mx-auto hidden max-w-[1500px] justify-between px-8 lg:flex">
       {cards.map((card, index) => (
         <motion.div
           key={card.title}

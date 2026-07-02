@@ -23,7 +23,7 @@ export default function HomePage() {
       <section className="relative px-4 pb-16 pt-16 sm:px-6 lg:px-8 lg:pb-24 lg:pt-24">
         <div className="yellow-orb -left-28 top-20 h-80 w-80" />
         <div className="yellow-orb -right-28 top-52 h-96 w-96 opacity-70" />
-        <div className="mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
+        <div className="site-container grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
           <div className="relative z-10">
             <div className="inline-flex items-center gap-2 rounded-full border border-yellow-300/25 bg-yellow-300/10 px-4 py-2 text-sm font-semibold text-yellow-100 shadow-lg shadow-yellow-500/10">
               <Sparkles className="h-4 w-4" /> Powered by Nexora Creation
@@ -94,7 +94,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <section className="site-container py-12">
         <div className="subtle-divider mb-10" />
         <div className="grid gap-4 lg:grid-cols-3">
           <div className="premium-panel p-6 lg:col-span-1">
@@ -114,7 +114,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+      <section className="site-container py-14">
         <div className="premium-panel overflow-hidden p-6 sm:p-8 lg:p-10">
           <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
             <div>
@@ -140,7 +140,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+      <section className="site-container py-14">
         <div className="glass-card flex flex-col justify-between gap-6 p-6 sm:p-8 md:flex-row md:items-center">
           <div>
             <h2 className="text-3xl font-black">Ready to see what is holding your website back?</h2>

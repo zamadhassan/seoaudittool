@@ -2,6 +2,7 @@ import * as cheerio from 'cheerio'
 import { nanoid } from 'nanoid'
 import { analyzeContent } from '@/features/audit/analyzers/content'
 import { analyzeCro } from '@/features/audit/analyzers/cro'
+import { analyzeCrawlSample } from '@/features/audit/analyzers/crawlSample'
 import { analyzeHeadings } from '@/features/audit/analyzers/headings'
 import { analyzeImages } from '@/features/audit/analyzers/images'
 import { analyzeLinks } from '@/features/audit/analyzers/links'
@@ -10,7 +11,9 @@ import { pageSpeedIssues, runPageSpeed } from '@/features/audit/analyzers/pageSp
 import { analyzeSecurity } from '@/features/audit/analyzers/security'
 import { extractPage } from '@/features/audit/crawler/extractPage'
 import { extractFavicon } from '@/features/audit/crawler/extractFavicon'
+import { crawlInternalPages } from '@/features/audit/crawler/crawlInternalPages'
 import { fetchHtml } from '@/features/audit/crawler/fetchHtml'
+import { env } from '@/lib/env'
 import { issue, pass } from './issueFactory'
 import { scoreReport } from './scoreReport'
 import { generateGroqSummary } from '@/features/audit/recommendations/groqProvider'
@@ -40,6 +43,12 @@ function analyzeAiSeo($: cheerio.CheerioAPI): AuditIssue[] {
 export async function runAudit(inputUrl: string): Promise<AuditReport> {
   const fetchResult = await fetchHtml(inputUrl)
   const $ = cheerio.load(fetchResult.html)
+  const homepage = extractPage($, fetchResult)
+  const internalPages = await crawlInternalPages($, fetchResult.finalUrl).catch((error) => {
+    console.warn('Internal crawl failed. Continuing with homepage audit.', error instanceof Error ? error.message : error)
+    return []
+  })
+  const pages = [homepage, ...internalPages]
   const pageSpeed = await runPageSpeed(fetchResult.finalUrl).catch((error) => {
     console.warn('PageSpeed audit failed. Continuing with custom checks.', error instanceof Error ? error.message : error)
     return null
@@ -54,6 +63,7 @@ export async function runAudit(inputUrl: string): Promise<AuditReport> {
     Promise.resolve(analyzeSecurity($, fetchResult)),
     Promise.resolve(analyzeCro($)),
     Promise.resolve(analyzeAiSeo($)),
+    Promise.resolve(analyzeCrawlSample(pages, env.maxCrawlPages)),
     Promise.resolve(pageSpeedIssues(pageSpeed))
   ])
 
@@ -73,7 +83,7 @@ export async function runAudit(inputUrl: string): Promise<AuditReport> {
     scores,
     issues,
     summary: aiRecommendations.summary,
-    pages: [extractPage($, fetchResult)],
+    pages,
     raw: {
       statusCode: fetchResult.statusCode,
       contentType: fetchResult.contentType,

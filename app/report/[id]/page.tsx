@@ -36,6 +36,14 @@ const reportSections = [
   { title: 'AI SEO Readiness', categories: ['AI SEO'], description: 'Answer engine readiness, entity clarity, FAQ signals, and structured support.' }
 ]
 
+const severityFilters = [
+  { value: 'all', label: 'All Issues' },
+  { value: 'critical', label: 'Critical' },
+  { value: 'warning', label: 'Warning' },
+  { value: 'notice', label: 'Notice' },
+  { value: 'passed', label: 'Passed' }
+] as const
+
 function severityCounts(issues: AuditIssue[]) {
   return {
     critical: issues.filter((issue) => issue.severity === 'critical').length,
@@ -115,7 +123,7 @@ export default function ReportPage() {
 
   if (loading) {
     return (
-      <main className="mx-auto min-h-[70vh] max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+      <main className="site-container min-h-[70vh] py-10">
         <div className="rounded-[10px] border border-white/10 bg-white/[0.04] p-8 text-zinc-300">Loading detailed report...</div>
       </main>
     )
@@ -143,7 +151,7 @@ export default function ReportPage() {
   const aiGenerated = ai.status === 'generated' && ai.provider === 'groq'
 
   return (
-    <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
+    <main className="site-container py-8 lg:py-10">
       <section className="premium-panel relative overflow-hidden p-5 sm:p-6 md:p-8">
         <div className="absolute -right-24 -top-24 h-80 w-80 rounded-full bg-yellow-300/12 blur-3xl" />
         <div className="relative grid gap-8 lg:grid-cols-[1.25fr_0.75fr] lg:items-center">
@@ -218,7 +226,7 @@ export default function ReportPage() {
               <div key={`${fix.title}-${index}`} className="rounded-[10px] border border-white/10 bg-white/[0.035] p-4">
                 <div className="flex items-center justify-between gap-3">
                   <p className="text-sm font-bold text-white">{fix.title}</p>
-                  <Badge variant="brand">{fix.priority}</Badge>
+                  <Badge variant="brand">{fix.priority.charAt(0).toUpperCase() + fix.priority.slice(1)}</Badge>
                 </div>
                 <p className="mt-2 text-xs leading-5 text-zinc-500">{fix.expectedImpact}</p>
               </div>
@@ -275,15 +283,31 @@ export default function ReportPage() {
           </div>
         </div>
         <div className="premium-panel p-6">
-          <h2 className="text-2xl font-black">Crawled page snapshot</h2>
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <h2 className="text-2xl font-black">Crawled Pages</h2>
+              <p className="mt-1 text-sm text-zinc-500">Homepage plus sampled internal pages from this site.</p>
+            </div>
+            <Badge variant="brand">{report.pages.length} pages</Badge>
+          </div>
           {page ? (
-            <div className="mt-4 space-y-3 text-sm text-zinc-400">
-              <p><span className="font-semibold text-white">Status:</span> {page.statusCode}</p>
-              <p><span className="font-semibold text-white">Title:</span> {page.title || 'Missing'}</p>
-              <p><span className="font-semibold text-white">H1:</span> {page.h1 || 'Missing'}</p>
-              <p><span className="font-semibold text-white">Words:</span> {page.wordCount}</p>
-              <p><span className="font-semibold text-white">Links:</span> {page.internalLinks} internal, {page.externalLinks} external</p>
-              <p><span className="font-semibold text-white">Images:</span> {page.imageCount}</p>
+            <div className="mt-4 max-h-80 space-y-3 overflow-y-auto pr-1 text-sm text-zinc-400">
+              {report.pages.map((item, index) => (
+                <div key={item.url} className="rounded-[10px] border border-white/10 bg-black/30 p-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="truncate font-semibold text-white">{index === 0 ? 'Homepage' : item.title || item.h1 || `Page ${index + 1}`}</p>
+                      <p className="mt-1 truncate text-xs text-zinc-500">{item.url}</p>
+                    </div>
+                    <span className="rounded-full border border-white/10 px-2 py-1 text-xs text-zinc-300">{item.statusCode}</span>
+                  </div>
+                  <div className="mt-3 grid grid-cols-3 gap-2 text-xs text-zinc-500">
+                    <span>{item.wordCount} words</span>
+                    <span>{item.internalLinks} internal</span>
+                    <span>{item.imageCount} images</span>
+                  </div>
+                </div>
+              ))}
             </div>
           ) : <p className="mt-4 text-sm text-zinc-500">No page snapshot available.</p>}
         </div>
@@ -301,7 +325,7 @@ export default function ReportPage() {
             <div key={`${fix.title}-${index}`} className="glass-card soft-transition rounded-[10px] p-6">
               <div className="flex items-center justify-between gap-4">
                 <div className="text-xs font-bold uppercase tracking-wider text-nexora-yellow">Fix #{index + 1}</div>
-                <div className="rounded-full bg-black/25 px-3 py-1 text-xs text-yellow-100">{fix.priority} priority</div>
+                <div className="rounded-full bg-black/25 px-3 py-1 text-xs text-yellow-100">{fix.priority.charAt(0).toUpperCase() + fix.priority.slice(1)} priority</div>
               </div>
               <h3 className="mt-3 text-xl font-bold">{fix.title}</h3>
               <p className="mt-3 text-sm leading-6 text-zinc-300">{fix.whyItMatters}</p>
@@ -319,10 +343,10 @@ export default function ReportPage() {
             <p className="mt-2 text-sm text-zinc-400">Filter by severity or review each section to understand what to fix and why it matters.</p>
           </div>
           <div className="flex flex-wrap gap-2">
-            {(['all', 'critical', 'warning', 'notice', 'passed'] as const).map((severity) => (
-              <button key={severity} onClick={() => setActiveSeverity(severity)} className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${activeSeverity === severity ? 'border-yellow-300 bg-yellow-300 text-black' : 'border-white/10 bg-black/20 text-zinc-300 hover:border-yellow-300/50'}`}>{severity}</button>
+            {severityFilters.map((filter) => (
+              <button key={filter.value} onClick={() => setActiveSeverity(filter.value)} className={`rounded-[10px] border px-4 py-2 text-sm font-semibold transition ${activeSeverity === filter.value ? 'border-yellow-300 bg-yellow-300 text-black shadow-lg shadow-yellow-500/15' : 'border-white/10 bg-black text-zinc-300 hover:border-yellow-300/50 hover:text-white'}`}>{filter.label}</button>
             ))}
-            <select value={activeCategory} onChange={(event) => setActiveCategory(event.target.value)} className="rounded-full border border-white/10 bg-black/40 px-4 py-2 text-sm font-semibold text-zinc-200 outline-none focus:border-yellow-300/50">
+            <select value={activeCategory} onChange={(event) => setActiveCategory(event.target.value)} className="rounded-[10px] border border-white/10 bg-black px-4 py-2 text-sm font-semibold text-zinc-200 outline-none transition focus:border-yellow-300/50">
               <option value="all">All categories</option>
               {categories.map((category) => <option key={category} value={category}>{category}</option>)}
             </select>
