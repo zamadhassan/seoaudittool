@@ -65,6 +65,7 @@ export type AuditReport = {
   url: string
   finalUrl: string
   domain: string
+  favicon: string | null
   createdAt: string
   scores: AuditScores
   issues: AuditIssue[]

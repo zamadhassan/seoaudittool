@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBolt, faChartLine, faCheckCircle, faGaugeHigh, faLock, faMagnifyingGlassChart, faMousePointer, faRobot, faShieldHalved, faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons'
 import { AuditForm } from '@/components/audit/AuditForm'
+import { HeroPreviewCards } from '@/components/audit/HeroPreviewCards'
 
 const features = [
   { icon: faMagnifyingGlassChart, title: 'Technical SEO Audit', text: 'Find title, meta, heading, crawlability, indexability, link, image, and schema issues.', accent: 'from-yellow-300/25 to-transparent' },
@@ -22,16 +23,15 @@ export default function HomePage() {
     <main className="overflow-hidden">
       <section className="relative px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
         <div className="absolute left-1/2 top-16 -z-10 h-72 w-72 -translate-x-1/2 rounded-full bg-yellow-300/15 blur-3xl" />
+        <HeroPreviewCards />
         <div className="mx-auto max-w-7xl text-center">
           <div className="animate-fade-up mx-auto mb-6 inline-flex items-center gap-2 rounded-full border border-yellow-300/30 bg-yellow-300/10 px-4 py-2 text-sm font-medium text-yellow-100 shadow-lg shadow-yellow-500/10">
             <FontAwesomeIcon icon={faWandMagicSparkles} className="h-4 w-4" />
             Professional website audit powered by Nexora Creation
           </div>
-          <h1 className="animate-fade-up mx-auto max-w-5xl text-5xl font-black tracking-tight text-white [animation-delay:120ms] sm:text-7xl">
-            SEO, Performance & CRO Audit Built for Real Growth
-          </h1>
+          <h1 className="animate-fade-up mx-auto max-w-5xl text-5xl font-black tracking-tight text-white [animation-delay:120ms] sm:text-7xl">Free Technical SEO Audit Tool</h1>
           <p className="animate-fade-up mx-auto mt-6 max-w-3xl text-lg leading-8 text-zinc-300 [animation-delay:220ms]">
-            Enter your website URL and get a practical report that explains what is hurting visibility, speed, trust, user experience, and lead generation.
+            Analyze SEO, performance, crawlability, accessibility, security, and technical issues in seconds.
           </p>
           <div className="animate-fade-up [animation-delay:320ms]">
             <AuditForm />

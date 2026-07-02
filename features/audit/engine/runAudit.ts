@@ -6,12 +6,14 @@ import { analyzeHeadings } from '@/features/audit/analyzers/headings'
 import { analyzeImages } from '@/features/audit/analyzers/images'
 import { analyzeLinks } from '@/features/audit/analyzers/links'
 import { analyzeMeta } from '@/features/audit/analyzers/meta'
+import { pageSpeedIssues, runPageSpeed } from '@/features/audit/analyzers/pageSpeed'
 import { analyzeSecurity } from '@/features/audit/analyzers/security'
 import { extractPage } from '@/features/audit/crawler/extractPage'
+import { extractFavicon } from '@/features/audit/crawler/extractFavicon'
 import { fetchHtml } from '@/features/audit/crawler/fetchHtml'
 import { issue, pass } from './issueFactory'
 import { scoreReport } from './scoreReport'
-import { buildFallbackSummary } from '@/features/audit/recommendations/fallbackRecommendations'
+import { generateGroqSummary } from '@/features/audit/recommendations/groqProvider'
 import type { AuditIssue, AuditReport } from '@/types/audit'
 
 function analyzeTechnical(fetchResult: Awaited<ReturnType<typeof fetchHtml>>): AuditIssue[] {
@@ -38,6 +40,10 @@ function analyzeAiSeo($: cheerio.CheerioAPI): AuditIssue[] {
 export async function runAudit(inputUrl: string): Promise<AuditReport> {
   const fetchResult = await fetchHtml(inputUrl)
   const $ = cheerio.load(fetchResult.html)
+  const pageSpeed = await runPageSpeed(fetchResult.finalUrl).catch((error) => {
+    console.warn('PageSpeed audit failed. Continuing with custom checks.', error instanceof Error ? error.message : error)
+    return null
+  })
   const analyzerResults = await Promise.allSettled([
     Promise.resolve(analyzeTechnical(fetchResult)),
     Promise.resolve(analyzeMeta($, fetchResult.finalUrl)),
@@ -47,29 +53,34 @@ export async function runAudit(inputUrl: string): Promise<AuditReport> {
     Promise.resolve(analyzeLinks($, fetchResult.finalUrl)),
     Promise.resolve(analyzeSecurity($, fetchResult)),
     Promise.resolve(analyzeCro($)),
-    Promise.resolve(analyzeAiSeo($))
+    Promise.resolve(analyzeAiSeo($)),
+    Promise.resolve(pageSpeedIssues(pageSpeed))
   ])
 
   const issues = analyzerResults.flatMap((result) => result.status === 'fulfilled' ? result.value : [issue({ title: 'Audit module failed', category: 'Technical SEO', description: result.reason instanceof Error ? result.reason.message : 'An audit module failed.', severity: 'notice', priority: 'low', scoreImpact: 1, recommendation: 'Re-run the audit or inspect server logs.' })])
   const scores = scoreReport(issues)
   const final = new URL(fetchResult.finalUrl)
+  const favicon = extractFavicon($, fetchResult.finalUrl)
+  const summary = await generateGroqSummary(issues, final.hostname)
 
   return {
     id: nanoid(12),
     url: inputUrl,
     finalUrl: fetchResult.finalUrl,
     domain: final.hostname,
+    favicon,
     createdAt: new Date().toISOString(),
     scores,
     issues,
-    summary: buildFallbackSummary(issues),
+    summary,
     pages: [extractPage($, fetchResult)],
     raw: {
       statusCode: fetchResult.statusCode,
       contentType: fetchResult.contentType,
       responseTimeMs: fetchResult.responseTimeMs,
       redirectChain: fetchResult.redirectChain,
-      headers: fetchResult.headers
+      headers: fetchResult.headers,
+      pageSpeed
     }
   }
 }

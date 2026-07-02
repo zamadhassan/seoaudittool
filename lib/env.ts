@@ -15,10 +15,15 @@ export const env = {
   cacheTtlHours: numberFromEnv('CACHE_TTL_HOURS', 24),
   enableLighthouse: process.env.ENABLE_LIGHTHOUSE === 'true',
   enablePlaywright: process.env.ENABLE_PLAYWRIGHT === 'true',
+  pageSpeedApiKey: process.env.PAGESPEED_API_KEY || '',
   ai: {
     provider: process.env.AI_PROVIDER || 'openrouter',
     apiKey: process.env.AI_API_KEY || process.env.GEMINI_API_KEY || process.env.GROK_API_KEY || '',
     baseUrl: process.env.AI_BASE_URL || process.env.GROK_BASE_URL || 'https://openrouter.ai/api/v1',
     model: process.env.AI_MODEL || process.env.GEMINI_MODEL || process.env.GROK_MODEL || 'google/gemini-flash-1.5'
+  },
+  groq: {
+    apiKey: process.env.GROQ_API_KEY || '',
+    model: process.env.GROQ_MODEL || 'llama-3.1-8b-instant'
   }
 }

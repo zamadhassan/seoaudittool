@@ -73,6 +73,55 @@ function scoreLabel(score: number) {
   return 'Critical'
 }
 
+async function loadImageDataUrl(src: string | null) {
+  if (!src) return null
+  try {
+    const response = await fetch(src)
+    if (!response.ok) return null
+    const blob = await response.blob()
+    return await new Promise<string>((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = () => resolve(String(reader.result))
+      reader.onerror = reject
+      reader.readAsDataURL(blob)
+    })
+  } catch {
+    return null
+  }
+}
+
+function imageFormat(dataUrl: string) {
+  if (dataUrl.includes('image/png')) return 'PNG'
+  if (dataUrl.includes('image/webp')) return 'WEBP'
+  return 'JPEG'
+}
+
+function renderIssueList(doc: PdfDoc, title: string, issues: AuditIssue[]) {
+  let y = newPage(doc, title)
+  if (!issues.length) {
+    setText(doc, brand.gray)
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(10)
+    doc.text('No issues found in this section.', 20, y)
+    return
+  }
+
+  issues.slice(0, 25).forEach((issue) => {
+    y = ensurePage(doc, y, title)
+    setText(doc, severityColor(issue.severity))
+    doc.setFont('helvetica', 'bold')
+    doc.setFontSize(9)
+    doc.text(`${issue.severity.toUpperCase()} | ${issue.category} | -${issue.scoreImpact} pts`, 20, y)
+    setText(doc, brand.black)
+    doc.setFontSize(10)
+    y = addWrappedText(doc, issue.title, 20, y + 6, 170, 5)
+    doc.setFont('helvetica', 'normal')
+    setText(doc, brand.gray)
+    y = addWrappedText(doc, issue.howToFix || issue.recommendation, 20, y + 1, 170, 5)
+    y += 8
+  })
+}
+
 export function PdfExportButton({ report }: { report: AuditReport }) {
   const [exporting, setExporting] = useState(false)
 
@@ -82,6 +131,9 @@ export function PdfExportButton({ report }: { report: AuditReport }) {
       const { jsPDF } = await import('jspdf')
       const doc = new jsPDF()
       const findings = report.issues.filter((issue) => issue.severity !== 'passed').sort((a, b) => b.scoreImpact - a.scoreImpact)
+      const criticalIssues = findings.filter((issue) => issue.severity === 'critical')
+      const warningIssues = findings.filter((issue) => issue.severity === 'warning')
+      const favicon = await loadImageDataUrl(report.favicon)
       const counts = {
         critical: report.issues.filter((issue) => issue.severity === 'critical').length,
         warning: report.issues.filter((issue) => issue.severity === 'warning').length,
@@ -97,6 +149,11 @@ export function PdfExportButton({ report }: { report: AuditReport }) {
       setText(doc, brand.yellow)
       doc.setFontSize(24)
       doc.text('Nexora Audit Pro', 20, 32)
+      if (favicon) {
+        try {
+          doc.addImage(favicon, imageFormat(favicon), 164, 22, 24, 24)
+        } catch {}
+      }
       setText(doc, brand.white)
       doc.setFontSize(16)
       addWrappedText(doc, `Website Growth Audit for ${report.domain}`, 20, 45, 170, 7)
@@ -178,6 +235,9 @@ export function PdfExportButton({ report }: { report: AuditReport }) {
         y = addWrappedText(doc, fix.howToFix, 26, y + 1, 155, 5)
         y += 12
       })
+
+      renderIssueList(doc, 'Critical Issues', criticalIssues)
+      renderIssueList(doc, 'Warning Issues', warningIssues)
 
       y = newPage(doc, 'Detailed Findings')
       findings.slice(0, 30).forEach((issue) => {

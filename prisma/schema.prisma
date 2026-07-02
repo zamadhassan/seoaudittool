@@ -41,6 +41,7 @@ model AuditReport {
   url                String
   finalUrl           String
   domain             String
+  favicon            String?
   status             AuditStatus  @default(completed)
   overallScore       Int
   technicalScore     Int

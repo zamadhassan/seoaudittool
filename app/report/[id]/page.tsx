@@ -7,21 +7,22 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowTrendUp, faBullseye, faCircleCheck, faExclamationCircle, faLightbulb, faRotateRight, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons'
 import { IssueCard } from '@/components/audit/IssueCard'
 import { PdfExportButton } from '@/components/audit/PdfExportButton'
+import { ReportCharts } from '@/components/audit/ReportCharts'
 import { ScoreCard } from '@/components/audit/ScoreCard'
+import { ShareReportButton } from '@/components/audit/ShareReportButton'
+import { WebsiteIcon } from '@/components/audit/WebsiteIcon'
+import { Badge } from '@/components/ui/badge'
 import { scoreLabel } from '@/lib/utils'
 import type { AuditIssue, AuditReport } from '@/types/audit'
 
 const scoreCards = [
+  ['Overall', 'overall', 'Complete website health score across all audit categories.'],
   ['Technical SEO', 'technical', 'Metadata, crawl signals, schema, links, and image SEO.'],
   ['Performance', 'performance', 'Initial response, caching, and lightweight delivery signals.'],
-  ['CRO', 'cro', 'CTA, lead form, trust, contact, and landing page readiness.'],
+  ['Crawlability', 'crawlability', 'Crawler access, redirects, and response health.'],
   ['Accessibility', 'accessibility', 'Language, alt text, link labels, and semantic signals.'],
   ['Security', 'security', 'HTTPS, mixed content, security headers, and safer links.'],
-  ['Crawlability', 'crawlability', 'Crawler access, redirects, and response health.'],
-  ['Indexability', 'indexability', 'Robots directives and search visibility blockers.'],
-  ['On-page SEO', 'onPage', 'Title, description, headings, and content depth.'],
-  ['Mobile UX', 'mobile', 'Viewport and mobile conversion readiness.'],
-  ['AI SEO', 'aiSeo', 'FAQ, structured data, and answer-ready content.']
+  ['On-page SEO', 'onPage', 'Title, description, headings, and content depth.']
 ] as const
 
 const reportSections = [
@@ -59,12 +60,18 @@ function scoreGuidance(score: number) {
   return 'Critical issues need attention before scaling SEO or ads.'
 }
 
+function pageSpeedData(report: AuditReport) {
+  const pageSpeed = report.raw.pageSpeed as { mobile?: { performanceScore?: number | null; firstContentfulPaint?: string | null; largestContentfulPaint?: string | null; cumulativeLayoutShift?: string | null; totalBlockingTime?: string | null; speedIndex?: string | null } | null; desktop?: { performanceScore?: number | null; firstContentfulPaint?: string | null; largestContentfulPaint?: string | null; cumulativeLayoutShift?: string | null; totalBlockingTime?: string | null; speedIndex?: string | null } | null } | null | undefined
+  return pageSpeed || null
+}
+
 export default function ReportPage() {
   const params = useParams<{ id: string }>()
   const [report, setReport] = useState<AuditReport | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [activeSeverity, setActiveSeverity] = useState<'all' | AuditIssue['severity']>('all')
+  const [activeCategory, setActiveCategory] = useState('all')
 
   useEffect(() => {
     const id = params.id
@@ -115,9 +122,12 @@ export default function ReportPage() {
 
   const counts = severityCounts(report.issues)
   const failedIssues = report.issues.filter((issue) => issue.severity !== 'passed')
-  const visibleIssues = activeSeverity === 'all' ? failedIssues : report.issues.filter((issue) => issue.severity === activeSeverity)
+  const categories = Array.from(new Set(report.issues.map((issue) => issue.category))).sort()
+  const visibleIssues = (activeSeverity === 'all' ? failedIssues : report.issues.filter((issue) => issue.severity === activeSeverity))
+    .filter((issue) => activeCategory === 'all' || issue.category === activeCategory)
   const page = report.pages[0]
   const responseTime = typeof report.raw.responseTimeMs === 'number' ? report.raw.responseTimeMs : null
+  const pageSpeed = pageSpeedData(report)
 
   return (
     <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
@@ -126,8 +136,16 @@ export default function ReportPage() {
         <div className="relative grid gap-8 lg:grid-cols-[1.3fr_0.7fr] lg:items-end">
           <div>
             <p className="text-sm uppercase tracking-[0.25em] text-nexora-yellow">Website Audit Report</p>
-            <h1 className="mt-3 break-words text-4xl font-black md:text-6xl">{report.domain}</h1>
-            <p className="mt-4 break-all text-zinc-300">{report.finalUrl}</p>
+            <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-center">
+              <WebsiteIcon src={report.favicon} domain={report.domain} />
+              <div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <h1 className="break-words text-4xl font-black md:text-6xl">{report.domain}</h1>
+                  <Badge variant="passed">Completed</Badge>
+                </div>
+                <p className="mt-2 break-all text-zinc-300">{report.finalUrl}</p>
+              </div>
+            </div>
             <p className="mt-3 text-sm text-zinc-400">
               Powered by{' '}
               <a href="https://nexoracreation.com" target="_blank" rel="noreferrer" className="font-semibold text-nexora-yellow hover:text-yellow-300">
@@ -150,6 +168,7 @@ export default function ReportPage() {
             <p className="mt-3 text-sm leading-6 text-zinc-400">{scoreGuidance(report.scores.overall)}</p>
             <div className="mt-6 flex flex-wrap gap-3">
               <PdfExportButton report={report} />
+              <ShareReportButton />
               <Link href={`/audit?url=${encodeURIComponent(report.finalUrl)}`} className="soft-transition rounded-full border border-white/15 px-5 py-3 font-bold text-white hover:border-yellow-300/50"><FontAwesomeIcon icon={faRotateRight} className="mr-2 h-4 w-4" />Re-run</Link>
             </div>
           </div>
@@ -163,9 +182,36 @@ export default function ReportPage() {
         <div className="glass-card soft-transition rounded-[10px] p-5"><FontAwesomeIcon icon={faCircleCheck} className="h-5 w-5 text-emerald-100" /><div className="mt-3 text-3xl font-black text-emerald-100">{counts.passed}</div><div className="text-sm text-emerald-100/80">Passed checks</div></div>
       </section>
 
-      <section className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+      <section className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {scoreCards.map(([label, key, detail]) => <ScoreCard key={key} label={label} score={scoreValue(report, key)} detail={detail} />)}
       </section>
+
+      <ReportCharts report={report} />
+
+      {pageSpeed ? (
+        <section className="mt-8 grid gap-4 md:grid-cols-2">
+          {(['mobile', 'desktop'] as const).map((strategy) => {
+            const data = pageSpeed[strategy]
+            return (
+              <div key={strategy} className="glass-card rounded-[10px] p-6">
+                <div className="flex items-center justify-between gap-4">
+                  <h2 className="text-xl font-black capitalize">PageSpeed {strategy}</h2>
+                  <Badge variant={data?.performanceScore && data.performanceScore >= 80 ? 'passed' : 'warning'}>{data?.performanceScore ?? 'N/A'}/100</Badge>
+                </div>
+                {data ? (
+                  <div className="mt-4 grid gap-3 text-sm text-zinc-400 sm:grid-cols-2">
+                    <p><span className="font-semibold text-white">FCP:</span> {data.firstContentfulPaint || 'N/A'}</p>
+                    <p><span className="font-semibold text-white">LCP:</span> {data.largestContentfulPaint || 'N/A'}</p>
+                    <p><span className="font-semibold text-white">CLS:</span> {data.cumulativeLayoutShift || 'N/A'}</p>
+                    <p><span className="font-semibold text-white">TBT:</span> {data.totalBlockingTime || 'N/A'}</p>
+                    <p><span className="font-semibold text-white">Speed Index:</span> {data.speedIndex || 'N/A'}</p>
+                  </div>
+                ) : <p className="mt-4 text-sm text-zinc-500">PageSpeed data was not available for this strategy.</p>}
+              </div>
+            )
+          })}
+        </section>
+      ) : null}
 
       <section className="mt-8 grid gap-6 lg:grid-cols-[1fr_0.8fr]">
         <div className="glass-card rounded-[10px] p-6">
@@ -225,6 +271,10 @@ export default function ReportPage() {
             {(['all', 'critical', 'warning', 'notice', 'passed'] as const).map((severity) => (
               <button key={severity} onClick={() => setActiveSeverity(severity)} className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${activeSeverity === severity ? 'border-yellow-300 bg-yellow-300 text-black' : 'border-white/10 bg-black/20 text-zinc-300 hover:border-yellow-300/50'}`}>{severity}</button>
             ))}
+            <select value={activeCategory} onChange={(event) => setActiveCategory(event.target.value)} className="rounded-full border border-white/10 bg-black/40 px-4 py-2 text-sm font-semibold text-zinc-200 outline-none focus:border-yellow-300/50">
+              <option value="all">All categories</option>
+              {categories.map((category) => <option key={category} value={category}>{category}</option>)}
+            </select>
           </div>
         </div>
         <div className="mt-5 grid gap-4 lg:grid-cols-2">

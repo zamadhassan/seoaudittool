@@ -15,7 +15,7 @@ export function Header() {
         <nav className="flex items-center gap-4 text-sm text-zinc-300">
           <a href="https://nexoracreation.com" target="_blank" rel="noreferrer" className="hidden items-center gap-2 hover:text-white sm:inline-flex">Nexora Creation <FontAwesomeIcon icon={faArrowUpRightFromSquare} className="h-3 w-3" /></a>
           <Link href="/dashboard" className="hidden hover:text-white sm:inline">Reports</Link>
-          <a href="/#audit" className="rounded-full bg-nexora-yellow px-4 py-2 font-semibold text-black hover:bg-yellow-300">Start Free Audit</a>
+          <Link href="/#audit" className="rounded-full bg-nexora-yellow px-4 py-2 font-semibold text-black hover:bg-yellow-300">Start Free Audit</Link>
         </nav>
       </div>
     </header>

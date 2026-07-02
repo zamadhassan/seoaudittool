@@ -21,6 +21,7 @@ export async function saveReport(report: AuditReport) {
         url: report.url,
         finalUrl: report.finalUrl,
         domain: report.domain,
+        favicon: report.favicon,
         overallScore: report.scores.overall,
         technicalScore: report.scores.technical,
         performanceScore: report.scores.performance,
@@ -75,6 +76,7 @@ export async function getReport(id: string) {
     url: stored.url,
     finalUrl: stored.finalUrl,
     domain: stored.domain,
+    favicon: stored.favicon,
     createdAt: stored.createdAt.toISOString(),
     scores: {
       overall: stored.overallScore,
