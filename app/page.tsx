@@ -1,49 +1,113 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBolt, faChartLine, faCheckCircle, faGaugeHigh, faLock, faMagnifyingGlassChart, faMousePointer, faRobot, faShieldHalved, faWandMagicSparkles } from '@fortawesome/free-solid-svg-icons'
+import { Accessibility, ArrowRight, Bot, CheckCircle2, Gauge, Globe2, Layers3, Radar, SearchCheck, ShieldCheck, Sparkles } from 'lucide-react'
 import { AuditForm } from '@/components/audit/AuditForm'
-import { HeroPreviewCards } from '@/components/audit/HeroPreviewCards'
 
-const features = [
-  { icon: faMagnifyingGlassChart, title: 'Technical SEO Audit', text: 'Find title, meta, heading, crawlability, indexability, link, image, and schema issues.', accent: 'from-yellow-300/25 to-transparent' },
-  { icon: faMousePointer, title: 'Conversion Readiness', text: 'Review calls to action, lead forms, trust signals, contact paths, and landing page friction.', accent: 'from-emerald-300/20 to-transparent' },
-  { icon: faGaugeHigh, title: 'Performance Signals', text: 'Check response speed, cache signals, page delivery basics, and performance improvement opportunities.', accent: 'from-blue-300/20 to-transparent' },
-  { icon: faShieldHalved, title: 'Security Review', text: 'Scan HTTPS, mixed content, security headers, and safer external-link behavior.', accent: 'from-red-300/20 to-transparent' },
-  { icon: faCheckCircle, title: 'Accessibility Checks', text: 'Identify common usability issues such as missing language, alt text, and accessible link labels.', accent: 'from-purple-300/20 to-transparent' },
-  { icon: faRobot, title: 'AI Search Readiness', text: 'Review FAQ, structured data, entity clarity, and answer-focused content signals.', accent: 'from-cyan-300/20 to-transparent' }
+const auditAreas = [
+  { icon: SearchCheck, title: 'Technical SEO', text: 'Titles, descriptions, headings, canonicals, schema, and crawl signals.' },
+  { icon: Gauge, title: 'Performance', text: 'Response speed, PageSpeed metrics, caching signals, and Core Web Vitals hints.' },
+  { icon: Radar, title: 'Crawlability', text: 'Status codes, redirects, indexability blockers, and crawler-friendly signals.' },
+  { icon: Accessibility, title: 'Accessibility', text: 'Language, image alt text, link labels, and common usability problems.' },
+  { icon: ShieldCheck, title: 'Security', text: 'HTTPS, mixed content, HSTS, CSP, and safer external link practices.' },
+  { icon: Bot, title: 'AI Summary', text: 'Groq-powered recommendations when configured, with fallback summaries if unavailable.' }
 ]
 
-const proofPoints = [
-  { icon: faBolt, label: 'Fast first audit', value: '30-90 sec' },
-  { icon: faLock, label: 'Safe URL checks', value: 'SSRF-aware' },
-  { icon: faChartLine, label: 'Actionable scoring', value: '0-100' }
+const previewRows = [
+  ['Technical SEO', 88],
+  ['Performance', 74],
+  ['Accessibility', 91],
+  ['Security', 82]
 ]
 
 export default function HomePage() {
   return (
     <main className="overflow-hidden">
-      <section className="relative px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
-        <div className="absolute left-1/2 top-16 -z-10 h-72 w-72 -translate-x-1/2 rounded-full bg-yellow-300/15 blur-3xl" />
-        <HeroPreviewCards />
-        <div className="mx-auto max-w-7xl text-center">
-          <div className="animate-fade-up mx-auto mb-6 inline-flex items-center gap-2 rounded-full border border-yellow-300/30 bg-yellow-300/10 px-4 py-2 text-sm font-medium text-yellow-100 shadow-lg shadow-yellow-500/10">
-            <FontAwesomeIcon icon={faWandMagicSparkles} className="h-4 w-4" />
-            Professional website audit powered by Nexora Creation
+      <section className="relative px-4 pb-16 pt-16 sm:px-6 lg:px-8 lg:pb-24 lg:pt-24">
+        <div className="yellow-orb -left-28 top-20 h-80 w-80" />
+        <div className="yellow-orb -right-28 top-52 h-96 w-96 opacity-70" />
+        <div className="mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
+          <div className="relative z-10">
+            <div className="inline-flex items-center gap-2 rounded-full border border-yellow-300/25 bg-yellow-300/10 px-4 py-2 text-sm font-semibold text-yellow-100 shadow-lg shadow-yellow-500/10">
+              <Sparkles className="h-4 w-4" /> Powered by Nexora Creation
+            </div>
+            <h1 className="mt-7 max-w-4xl text-5xl font-black leading-[0.95] tracking-tight text-white sm:text-6xl lg:text-7xl">
+              Free Technical SEO Audit Tool
+            </h1>
+            <p className="mt-6 max-w-2xl text-base leading-8 text-zinc-300 sm:text-lg">
+              Analyze SEO, performance, crawlability, accessibility, security, and technical issues in seconds.
+            </p>
+            <div className="mt-8 max-w-3xl">
+              <AuditForm />
+            </div>
+            <div className="mt-6 flex flex-wrap gap-3 text-sm text-zinc-400">
+              {['No login required', 'Real website checks', 'No paid SEO APIs'].map((item) => (
+                <span key={item} className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-2">
+                  <CheckCircle2 className="h-4 w-4 text-nexora-yellow" /> {item}
+                </span>
+              ))}
+            </div>
           </div>
-          <h1 className="animate-fade-up mx-auto max-w-5xl text-5xl font-black tracking-tight text-white [animation-delay:120ms] sm:text-7xl">Free Technical SEO Audit Tool</h1>
-          <p className="animate-fade-up mx-auto mt-6 max-w-3xl text-lg leading-8 text-zinc-300 [animation-delay:220ms]">
-            Analyze SEO, performance, crawlability, accessibility, security, and technical issues in seconds.
-          </p>
-          <div className="animate-fade-up [animation-delay:320ms]">
-            <AuditForm />
-          </div>
-          <p className="mt-4 text-sm text-zinc-500">No login required. No paid SEO data APIs. Results are generated from real website checks.</p>
 
-          <div className="mx-auto mt-10 grid max-w-4xl gap-3 sm:grid-cols-3">
-            {proofPoints.map((item, index) => (
-              <div key={item.label} className="glass-card soft-transition rounded-[10px] p-4 text-left" style={{ animationDelay: `${index * 90 + 420}ms` }}>
-                <FontAwesomeIcon icon={item.icon} className="h-5 w-5 text-nexora-yellow" />
-                <div className="mt-3 text-2xl font-black">{item.value}</div>
-                <div className="text-sm text-zinc-400">{item.label}</div>
+          <div className="relative">
+            <div className="premium-panel relative overflow-hidden p-4 sm:p-5">
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-yellow-300/70 to-transparent" />
+              <div className="rounded-[10px] border border-white/10 bg-black/35 p-4">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-[10px] bg-nexora-yellow text-black">
+                      <Globe2 className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <div className="font-bold">example.com</div>
+                      <div className="text-xs text-zinc-500">Live audit preview</div>
+                    </div>
+                  </div>
+                  <span className="rounded-full border border-emerald-400/25 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-100">Completed</span>
+                </div>
+                <div className="mt-6 grid gap-3 sm:grid-cols-[0.75fr_1fr]">
+                  <div className="rounded-[10px] border border-yellow-300/20 bg-yellow-300/10 p-5 text-center">
+                    <div className="text-6xl font-black text-nexora-yellow">86</div>
+                    <div className="mt-1 text-sm text-yellow-100">Overall Score</div>
+                  </div>
+                  <div className="space-y-3">
+                    {previewRows.map(([label, score]) => (
+                      <div key={label}>
+                        <div className="mb-1 flex justify-between text-xs text-zinc-400"><span>{label}</span><span>{score}/100</span></div>
+                        <div className="h-2 rounded-full bg-white/10"><div className="h-full rounded-full bg-nexora-yellow" style={{ width: `${score}%` }} /></div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                {[
+                  ['Critical', '2', 'text-red-200'],
+                  ['Warnings', '9', 'text-yellow-100'],
+                  ['Passed', '31', 'text-emerald-100']
+                ].map(([label, value, tone]) => (
+                  <div key={label} className="rounded-[10px] border border-white/10 bg-white/[0.035] p-4">
+                    <div className={`text-2xl font-black ${tone}`}>{value}</div>
+                    <div className="text-xs text-zinc-500">{label}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <div className="subtle-divider mb-10" />
+        <div className="grid gap-4 lg:grid-cols-3">
+          <div className="premium-panel p-6 lg:col-span-1">
+            <div className="flex h-11 w-11 items-center justify-center rounded-[10px] bg-nexora-yellow text-black"><Layers3 className="h-5 w-5" /></div>
+            <h2 className="mt-5 text-3xl font-black">Built for clear decisions, not confusing dashboards.</h2>
+            <p className="mt-4 text-sm leading-7 text-zinc-400">Every section is written for clients and business owners, with priorities, impact, and practical next steps.</p>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:col-span-2">
+            {auditAreas.map((item) => (
+              <div key={item.title} className="glass-card soft-transition p-5">
+                <item.icon className="h-5 w-5 text-nexora-yellow" />
+                <h3 className="mt-4 font-bold">{item.title}</h3>
+                <p className="mt-2 text-sm leading-6 text-zinc-400">{item.text}</p>
               </div>
             ))}
           </div>
@@ -51,44 +115,40 @@ export default function HomePage() {
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-        <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-end">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-nexora-yellow">What the audit checks</p>
-            <h2 className="mt-3 text-3xl font-black md:text-4xl">Clear checks, practical fixes, no guesswork.</h2>
-          </div>
-          <p className="max-w-xl text-sm leading-6 text-zinc-400">Designed for business owners, marketers, freelancers, and agencies who need a report that is easy to understand and useful to act on.</p>
-        </div>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {features.map((feature) => (
-            <div key={feature.title} className="glass-card soft-transition group relative overflow-hidden rounded-[10px] p-6">
-              <div className={`absolute inset-0 -z-10 bg-gradient-to-br ${feature.accent} opacity-70 transition duration-300 group-hover:opacity-100`} />
-              <div className="flex h-12 w-12 items-center justify-center rounded-[10px] border border-yellow-300/25 bg-yellow-300/10 text-nexora-yellow shadow-lg shadow-yellow-500/10">
-                <FontAwesomeIcon icon={feature.icon} className="h-5 w-5" />
-              </div>
-              <h3 className="mt-5 text-xl font-bold">{feature.title}</h3>
-              <p className="mt-3 text-sm leading-6 text-zinc-400">{feature.text}</p>
+        <div className="premium-panel overflow-hidden p-6 sm:p-8 lg:p-10">
+          <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-nexora-yellow">Workflow</p>
+              <h2 className="mt-3 text-3xl font-black sm:text-4xl">From URL to prioritized fixes.</h2>
+              <p className="mt-4 text-sm leading-7 text-zinc-400">The tool fetches your page, reads the HTML, checks real SEO and UX signals, then turns findings into a report your team can act on.</p>
             </div>
-          ))}
+            <div className="grid gap-3 sm:grid-cols-2">
+              {[
+                ['01', 'Fetch website', 'Validate URL and fetch the live page safely.'],
+                ['02', 'Read HTML', 'Extract metadata, headings, links, images, and schema.'],
+                ['03', 'Score signals', 'Calculate category scores and severity levels.'],
+                ['04', 'Prepare report', 'Create priorities, recommendations, charts, and PDF export.']
+              ].map(([step, title, text]) => (
+                <div key={step} className="rounded-[10px] border border-white/10 bg-black/30 p-5">
+                  <div className="text-xs font-black text-nexora-yellow">{step}</div>
+                  <div className="mt-2 font-bold">{title}</div>
+                  <div className="mt-2 text-sm leading-6 text-zinc-500">{text}</div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="glass-card animate-glow-pulse rounded-[10px] p-8 md:p-12">
-          <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-nexora-yellow">Workflow</p>
-              <h2 className="mt-3 text-3xl font-black">How your audit works</h2>
-            </div>
-            <a href="https://nexoracreation.com" target="_blank" rel="noreferrer" className="text-sm font-semibold text-nexora-yellow hover:text-yellow-300">Powered by Nexora Creation</a>
+      <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+        <div className="glass-card flex flex-col justify-between gap-6 p-6 sm:p-8 md:flex-row md:items-center">
+          <div>
+            <h2 className="text-3xl font-black">Ready to see what is holding your website back?</h2>
+            <p className="mt-3 text-sm text-zinc-400">Run a free audit and get a client-friendly technical SEO report.</p>
           </div>
-          <div className="mt-8 grid gap-4 md:grid-cols-4">
-            {['Securely validate your URL', 'Fetch and analyze real page HTML', 'Run SEO, CRO, UX, and security checks', 'Show scores, priorities, and fixes'].map((step, index) => (
-              <div key={step} className="soft-transition rounded-[10px] border border-white/10 bg-black/30 p-5 shadow-xl shadow-black/20">
-                <div className="flex h-11 w-11 items-center justify-center rounded-[10px] bg-nexora-yellow font-black text-black">0{index + 1}</div>
-                <div className="mt-4 font-semibold leading-6">{step}</div>
-              </div>
-            ))}
-          </div>
+          <a href="#audit" className="inline-flex items-center justify-center gap-2 rounded-[10px] bg-nexora-yellow px-5 py-3 font-bold text-black transition hover:bg-yellow-300">
+            Run Free Audit <ArrowRight className="h-4 w-4" />
+          </a>
         </div>
       </section>
     </main>

@@ -2,6 +2,14 @@ import { env } from '@/lib/env'
 import { buildFallbackSummary } from './fallbackRecommendations'
 import type { AuditIssue, AuditSummary } from '@/types/audit'
 
+export type AIRecommendationResult = {
+  summary: AuditSummary
+  status: 'generated' | 'missing_key' | 'failed'
+  provider: 'groq' | 'fallback'
+  model?: string
+  message?: string
+}
+
 function parseSummary(value: unknown, fallback: AuditSummary): AuditSummary {
   const data = value as Partial<AuditSummary>
   if (!data || typeof data.executiveSummary !== 'string' || !Array.isArray(data.topFixes)) return fallback
@@ -20,11 +28,21 @@ function parseSummary(value: unknown, fallback: AuditSummary): AuditSummary {
   }
 }
 
-export async function generateGroqSummary(issues: AuditIssue[], domain: string): Promise<AuditSummary> {
+function parseJsonContent(content: string) {
+  try {
+    return JSON.parse(content)
+  } catch {
+    const match = content.match(/\{[\s\S]*\}/)
+    if (!match) throw new Error('Groq response did not contain JSON.')
+    return JSON.parse(match[0])
+  }
+}
+
+export async function generateGroqSummary(issues: AuditIssue[], domain: string): Promise<AIRecommendationResult> {
   const fallback = buildFallbackSummary(issues)
   if (!env.groq.apiKey) {
     console.warn('GROQ_API_KEY is missing. Using fallback audit recommendations.')
-    return fallback
+    return { summary: fallback, status: 'missing_key', provider: 'fallback', message: 'GROQ_API_KEY is not configured.' }
   }
 
   const findings = issues
@@ -54,7 +72,6 @@ export async function generateGroqSummary(issues: AuditIssue[], domain: string):
       body: JSON.stringify({
         model: env.groq.model,
         temperature: 0.2,
-        response_format: { type: 'json_object' },
         messages: [
           {
             role: 'system',
@@ -70,11 +87,12 @@ export async function generateGroqSummary(issues: AuditIssue[], domain: string):
     if (!response.ok) throw new Error(`Groq request failed with ${response.status}`)
     const data = await response.json() as { choices?: Array<{ message?: { content?: string } }> }
     const content = data.choices?.[0]?.message?.content
-    if (!content) return fallback
-    return parseSummary(JSON.parse(content), fallback)
+    if (!content) throw new Error('Groq returned an empty response.')
+    return { summary: parseSummary(parseJsonContent(content), fallback), status: 'generated', provider: 'groq', model: env.groq.model }
   } catch (error) {
-    console.warn('Groq recommendations failed. Using fallback recommendations.', error instanceof Error ? error.message : error)
-    return fallback
+    const message = error instanceof Error ? error.message : 'Groq recommendations failed.'
+    console.warn('Groq recommendations failed. Using fallback recommendations.', message)
+    return { summary: fallback, status: 'failed', provider: 'fallback', model: env.groq.model, message }
   } finally {
     clearTimeout(timeout)
   }

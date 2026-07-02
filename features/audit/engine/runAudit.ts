@@ -61,7 +61,7 @@ export async function runAudit(inputUrl: string): Promise<AuditReport> {
   const scores = scoreReport(issues)
   const final = new URL(fetchResult.finalUrl)
   const favicon = extractFavicon($, fetchResult.finalUrl)
-  const summary = await generateGroqSummary(issues, final.hostname)
+  const aiRecommendations = await generateGroqSummary(issues, final.hostname)
 
   return {
     id: nanoid(12),
@@ -72,7 +72,7 @@ export async function runAudit(inputUrl: string): Promise<AuditReport> {
     createdAt: new Date().toISOString(),
     scores,
     issues,
-    summary,
+    summary: aiRecommendations.summary,
     pages: [extractPage($, fetchResult)],
     raw: {
       statusCode: fetchResult.statusCode,
@@ -80,7 +80,13 @@ export async function runAudit(inputUrl: string): Promise<AuditReport> {
       responseTimeMs: fetchResult.responseTimeMs,
       redirectChain: fetchResult.redirectChain,
       headers: fetchResult.headers,
-      pageSpeed
+      pageSpeed,
+      ai: {
+        status: aiRecommendations.status,
+        provider: aiRecommendations.provider,
+        model: aiRecommendations.model,
+        message: aiRecommendations.message
+      }
     }
   }
 }
